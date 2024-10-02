@@ -1,7 +1,10 @@
 using Lab1.Data;
+using Lab1.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+// I, Chris Dent, 000849456, certify that this material is my original work. No other person's work has been used without due
+// acknowledgement and I have not made my work available to anyone else.
 namespace Lab1
 {
     public class Program
@@ -16,11 +19,18 @@ namespace Lab1
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                DbInitializer.SeedUsersAndRoles(scope.ServiceProvider).Wait();
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
