@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Lab1.Data;
 using Lab1.Models;
 using Microsoft.AspNetCore.Authorization;
-
+// I, Chris Dent, 000849456, certify that this material is my original work. No other person's work has been used without due
+// acknowledgement and I have not made my work available to anyone else.
 namespace Lab1.Controllers
 {
     [Authorize]
