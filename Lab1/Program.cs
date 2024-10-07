@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Lab1.Data;
 using Lab1.Models;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +12,7 @@ namespace Lab1
     {
         public static void Main(string[] args)
         {
+            
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -24,6 +26,13 @@ namespace Lab1
                 .AddDefaultTokenProviders()
                 .AddDefaultUI();
             builder.Services.AddControllersWithViews();
+
+            var kvUri = new Uri(builder.Configuration.GetSection("KVURI").Value);
+            var azCred = new DefaultAzureCredential();
+
+            builder.Configuration.AddAzureKeyVault(kvUri, azCred);
+
+            DbInitializer.password = builder.Configuration.GetSection("Lab2SecretUser").Value;
 
             var app = builder.Build();
 
